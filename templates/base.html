@@ -15,14 +15,11 @@
     <div class="link">       
         <a href="/newpost">Make a Post</a> |
     </div>
-
-    {% with messages = get_flashed_messages() %}
-        <ul>
-        {% for message in messages %}
-            <li>{{message}}</li>
-        {% endfor %}
-        <ul>
-    {% endwith %}
+    <div class="link">
+        <a href="/login">Login</a> |
+    </div>
+    <div class ="link">
+        <a href="/logout">Logout</a>    
 
     {% block content %}
     {% endblock %}
