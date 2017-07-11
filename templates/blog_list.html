@@ -8,7 +8,6 @@
     {% if posts|length == 0 %}
     <p>No posts Yet</p>
     {% else %}
-
         <ul>
             {% for post in posts %}
             <li><h2><a href="/blog?id={{post.id}}">{{post.title}}</a></h2>

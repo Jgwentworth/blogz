@@ -39,6 +39,7 @@ def require_login():
 
 @app.route("/blog")
 def blog_page():
+    owner = User.query.filter_by(username=session['username']).first()
     posts = Blog.query.all()
     
     if request.method == 'GET': 
@@ -58,10 +59,13 @@ def is_blank(resp):
     if len(resp) == 0:
         return True
     else:
-        return False   
+        return False 
+
 @app.route("/")
 def index():
-    return render_template("index.html")
+    authors = User.query.all()
+
+    return render_template('index.html', authors = authors)
 
 @app.route("/signup", methods=["POST", "GET"])
 def signup():
