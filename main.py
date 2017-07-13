@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, render_template, session, flash
+from flask import Flask, request, redirect, render_template, session
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -39,14 +39,19 @@ def require_login():
 
 @app.route("/blog")
 def blog_page():
-    owner = User.query.filter_by(username=session['username']).first()
     posts = Blog.query.all()
     
     if request.method == 'GET': 
-        if 'id' in request.args:
-            post_id = request.args.get('id')
-            content = Blog.query.get(post_id)
-            return render_template('blog_page.html', content = content)
+        if "userid" in request.args:
+            author = request.args.get("userid")
+            content = Blog.query.filter_by(owner_id=author).all()
+            user = User.query.filter_by(id=author).first()
+            return render_template('blog_page.html', content = content, user=user)
+
+        if "id" in request.args:
+            post = request.args.get("id")
+            content = Blog.query.filter_by(id=post).first()
+            return render_template("single_post.html", content=content, user=user)
 
     return render_template('blog_list.html', title="Blog Post",
               posts = posts)
@@ -174,7 +179,7 @@ def new_post():
         db.session.add(new_post)
         db.session.commit()
         page_id = new_post.id
-        return redirect("/blog?id={0}".format(page_id))
+        return redirect("/blog")
 
     else:
         return render_template("newpost.html",

@@ -2,23 +2,20 @@
 
 {% block content %}
 
-    <h1>Build a Blog!</h1>
-    <hr />
+<h1>Build a Blog!</h1>
+<div class="row">
+    <div class="list-group">
+        {% for post in posts %}
+        <div class="col-md-6 col-md-offset-1">
+            <h2><a href="/blog?id={{post.id}}" class="list-group-item">{{post.title}}</a></h2>
+        </div>
+        <div class="col-md-4 col-md-offset-2">
+            {{post.body}}
+        </div>    
+    </div>
+    {% endfor %}
+</div>
 
-    {% if posts|length == 0 %}
-    <p>No posts Yet</p>
-    {% else %}
-        <ul>
-            {% for post in posts %}
-            <li><h2><a href="/blog?id={{post.id}}">{{post.title}}</a></h2>
-                <br>
-                {{post.body}}
-                <hr>
-            </li>
-            {% endfor %}
-        </ul>    
-
-    {% endif %}
 
 
 {% endblock %}

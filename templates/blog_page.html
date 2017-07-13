@@ -5,10 +5,16 @@
 <div class="blog_header">
     <h1>User's Posts</h1>
 </div>
+    {% for post in content %}
+    <li><h2><a href="/blog?id={{post.id}}">{{post.title}}</a></h2>
+        <br>
+        {{post.body}}
+        <br>
+        
+        <h4>Original Poster:<a href="">{{user.username}}</a></h4>
+        <hr>
+    </li>
+    {% endfor %}
 
-<h2>{{content.title}}</h2>
-<br>
-<hr>
-<p>{{content.body}}</p>
 
 {% endblock %}

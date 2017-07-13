@@ -3,8 +3,17 @@
 {% block content %}
 
     {% for author in authors %}
-        <h3><a href="/blog?id={{author.id}}">{{author.username}}</a></h3>
-    {% endfor %}    
-
+    <div class="row">
+  <div class="col-md-6 col-md-offset-3">
+        <ul class="list-group">
+            <li class="list-group-item">
+            <a href="/blog?userid={{author.id}}">    
+            {{author.username}}
+            </a>
+        </li>
+        </ul>
+  </div>
+  </div>    
+    {% endfor %}
 
 {% endblock %}
