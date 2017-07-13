@@ -51,6 +51,8 @@ def blog_page():
         if "id" in request.args:
             post = request.args.get("id")
             content = Blog.query.filter_by(id=post).first()
+            author = content.owner_id
+            user = User.query.filter_by(id=author).first()
             return render_template("single_post.html", content=content, user=user)
 
     return render_template('blog_list.html', title="Blog Post",
