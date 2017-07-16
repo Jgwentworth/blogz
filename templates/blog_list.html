@@ -11,8 +11,12 @@
         </div>
         <div class="col-md-4 col-md-offset-2">
             {{post.body}}
-        </div>    
+            <br>
+            <h3>Original Poster:<a href="/blog?userid={{post.owner.id}}">{{post.owner.username}}
+        </div>        
+
     </div>
+    </hr>
     {% endfor %}
 </div>
 

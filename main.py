@@ -40,6 +40,7 @@ def require_login():
 @app.route("/blog")
 def blog_page():
     posts = Blog.query.all()
+    user = User.query.all()
     
     if request.method == 'GET': 
         if "userid" in request.args:
@@ -56,7 +57,7 @@ def blog_page():
             return render_template("single_post.html", content=content, user=user)
 
     return render_template('blog_list.html', title="Blog Post",
-              posts = posts)
+              posts = posts, user=user)
 
 @app.route("/newpost")
 def post():
@@ -181,7 +182,7 @@ def new_post():
         db.session.add(new_post)
         db.session.commit()
         page_id = new_post.id
-        return redirect("/blog")
+        return redirect("/blog?id={0}".format(page_id))
 
     else:
         return render_template("newpost.html",
