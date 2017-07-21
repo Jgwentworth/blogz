@@ -143,13 +143,18 @@ def login():
         if user and user.password == password:
             session['username'] = username
             return redirect('/newpost')
-        if not user:
-            username = ""
-            user_error = "Incorrect Username"
-        if password != user.password:
-            password = ""
-            pass_error = "Incorrect Password"    
+        # TODO need to fix this
+        #if not user:
+            #username = ""
+            #user_error = "Incorrect Username or User doesn't exist"
+        #if password != user.password:
+            #password = ""
+            #pass_error = "Incorrect Password"    
         else:
+            user_error = "Incorrect Username or User doesn't exist"
+            pass_error = "Incorrect Password"
+            username = ""
+            password = ""
             return render_template("login.html",
                 username = username,
                 password = password,
