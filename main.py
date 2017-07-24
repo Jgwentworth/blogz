@@ -1,36 +1,10 @@
 from flask import Flask, request, redirect, render_template, session
-from flask_sqlalchemy import SQLAlchemy
-import os
+from hashutils import check_pw_hash
+from app import app, db
+from models import User, Blog
+import string
 
-app = Flask(__name__)
-app.config['DEBUG'] =True
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get('DATABASE_URL',"mysql+pymysql://blogz:blogz123@localhost:8889/blogz")
-app.config["SQLALCHEMY_ECHO"] = True
-db = SQLAlchemy(app)
 app.secret_key = "jhyboadnun"
-
-class Blog(db.Model):
-
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(120))
-    body = db.Column(db.String(255))
-    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    
-    def __init__(self, title, body, owner):
-        self.title = title
-        self.body = body
-        self.owner = owner
-
-class User(db.Model):
-    
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(120), unique=True)
-    password = db.Column(db.String(120))
-    blogs = db.relationship("Blog", backref="owner")
-
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
 
 @app.before_request
 def require_login():
@@ -43,19 +17,18 @@ def blog_page():
     posts = Blog.query.all()
     user = User.query.all()
     
-    if request.method == 'GET': 
-        if "userid" in request.args:
-            author = request.args.get("userid")
-            content = Blog.query.filter_by(owner_id=author).all()
-            user = User.query.filter_by(id=author).first()
-            return render_template('blog_page.html', content = content, user=user)
+    if "userid" in request.args:
+        author = request.args.get("userid")
+        content = Blog.query.filter_by(owner_id=author).all()
+        user = User.query.filter_by(id=author).first()
+        return render_template('blog_page.html', content = content, user=user)
 
-        if "id" in request.args:
-            post = request.args.get("id")
-            content = Blog.query.filter_by(id=post).first()
-            author = content.owner_id
-            user = User.query.filter_by(id=author).first()
-            return render_template("single_post.html", content=content, user=user)
+    if "id" in request.args:
+        post = request.args.get("id")
+        content = Blog.query.filter_by(id=post).first()
+        author = content.owner_id
+        user = User.query.filter_by(id=author).first()
+        return render_template("single_post.html", content=content, user=user)
 
     return render_template('blog_list.html', title="Blog Post",
               posts = posts, user=user)
@@ -140,7 +113,7 @@ def login():
         pass_error = ""
         user_error = ""
 
-        if user and user.password == password:
+        if user and check_pw_hash(password, user.pw_hash):
             session['username'] = username
             return redirect('/newpost')
         # TODO need to fix this
